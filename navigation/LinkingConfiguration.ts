@@ -4,18 +4,15 @@ export default {
   prefixes: [Linking.makeUrl('/')],
   config: {
     screens: {
-      Root: {
+      Products: {
         screens: {
-          TabOne: {
-            screens: {
-              TabOneScreen: 'one',
-            },
-          },
-          TabTwo: {
-            screens: {
-              TabTwoScreen: 'two',
-            },
-          },
+          ProductOverview: 'overview',
+          ProductDetail: 'detail',
+        },
+      },
+      Profile: {
+        screens: {
+          ProfileScreen: 'profile',
         },
       },
       NotFound: '*',
