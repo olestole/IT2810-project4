@@ -4,15 +4,19 @@ import { StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import LoadingIndicator from '../components/Shared/LoadingIndicator';
 import { GET_SINGLE_PRODUCT } from '../graphql';
+import { AppState } from '../store/types';
+import { useDispatch, useSelector } from 'react-redux';
 
 const DetailScreen = ({ navigation }: any) => {
   const { data, loading, error } = useQuery(GET_SINGLE_PRODUCT, {
     variables: { number: '255' },
   });
+  const currentProduct = useSelector((state: AppState) => state.currentProduct);
+  const modalOpen = useSelector((state: AppState) => state.modalOpen);
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    console.log(currentProduct);
+  }, [currentProduct]);
 
   if (loading) return <LoadingIndicator />;
 
