@@ -1,15 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StyleSheet, View } from 'react-native';
+import ProductList from '../components/Overview/ProductList';
 
 const OverviewScreen = ({ navigation }: any) => {
   console.log(navigation);
 
+  const handleDetailNavigation = (varenummer: string) => {
+    navigation.navigate('Detail');
+  };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate('Detail')}>
-        <Text>Overview-screen</Text>
-      </TouchableOpacity>
+      <ProductList handleDetailNavigation={handleDetailNavigation} />
     </View>
   );
 };
@@ -19,8 +21,9 @@ export default OverviewScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginHorizontal: 20,
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   title: {
     fontSize: 20,

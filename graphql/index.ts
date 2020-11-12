@@ -1,0 +1,4 @@
+import { GET_REVIEWS, GET_PERSONAL_REVIEWS, GET_SINGLE_PRODUCT } from './queries';
+import { ADD_REVIEW } from './mutations';
+
+export { ADD_REVIEW, GET_REVIEWS, GET_PERSONAL_REVIEWS, GET_SINGLE_PRODUCT };
