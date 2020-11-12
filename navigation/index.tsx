@@ -2,6 +2,7 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 import { Button, ColorSchemeName } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import Header from '../components/Header';
 import DetailScreen from '../screens/DetailScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
@@ -13,10 +14,7 @@ import LinkingConfiguration from './LinkingConfiguration';
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-    >
+    <NavigationContainer linking={LinkingConfiguration}>
       <RootNavigator />
     </NavigationContainer>
   );
@@ -27,11 +25,14 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const { colors } = useTheme();
+
   return (
     <Stack.Navigator
       screenOptions={{
+        headerTintColor: '#fff',
         headerStyle: {
-          backgroundColor: '#f4511e',
+          backgroundColor: colors.primary,
         },
         headerLeft: () => <Button title='halla' onPress={() => console.log('hallais')} />,
         // title: 'Hallais',

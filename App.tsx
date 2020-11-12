@@ -7,6 +7,7 @@ import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 import { AppContextProvider } from './context';
+import ApolloWrapper from './components/ApolloWrapper';
 
 const theme = {
   ...DefaultTheme,
@@ -25,14 +26,16 @@ export default function App() {
     return null;
   } else {
     return (
-      <SafeAreaProvider>
-        <AppContextProvider>
-          <PaperProvider theme={theme}>
-            <Navigation colorScheme={colorScheme} />
-            <StatusBar />
-          </PaperProvider>
-        </AppContextProvider>
-      </SafeAreaProvider>
+      <ApolloWrapper>
+        <SafeAreaProvider>
+          <AppContextProvider>
+            <PaperProvider theme={theme}>
+              <Navigation colorScheme={colorScheme} />
+              <StatusBar />
+            </PaperProvider>
+          </AppContextProvider>
+        </SafeAreaProvider>
+      </ApolloWrapper>
     );
   }
 }
