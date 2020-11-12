@@ -1,8 +1,8 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "generate": "apollo codegen:generate --target typescript",
+    "start": "npm run generate && expo start",
+    "generate": "apollo codegen:generate --target typescript --includes=graphql/**/*.ts --tagName=gql --addTypename --globalTypesFile=types/graphql-global-types.ts generated",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
