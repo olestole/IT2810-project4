@@ -12,7 +12,7 @@ import React, { useEffect, useState } from 'react';
 
 const ApolloWrapper: React.FC = ({ children }) => {
   // const { isAuthenticated, getAccessTokenSilently } = useAuth0();
-  const [bearerToken, setBearerToken] = useState('');
+  // const [bearerToken, setBearerToken] = useState('');
 
   // useEffect(() => {
   //   const getToken = async () => {

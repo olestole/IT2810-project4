@@ -1,7 +1,15 @@
+import { useQuery } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DataTable } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { ProductsQuery } from '../../graphql/generated/ProductsQuery';
+import { PRODUCTS } from '../../graphql/queries';
+import { updateViewMode } from '../../store/action';
+import { AppState, FilterOptions, ViewMode } from '../../store/types';
+import { filterGlobalToArray } from '../../utils/product';
+import LoadingIndicator from '../Shared/LoadingIndicator';
 import ProductListItem from './ProductListItem';
 
 const styles = StyleSheet.create({
@@ -29,22 +37,92 @@ interface IProductList {
 }
 
 const ProductList: React.FC<IProductList> = ({ handleDetailNavigation }) => {
-  const [data, setData] = useState<IProduct[]>([]);
+  const searchText: string = useSelector((state: AppState) => state.searchText);
+  const dispatch = useDispatch();
 
-  const dataGenerator = () => {
-    const res = [];
-    for (let i = 0; i < 40; i++) {
-      res.push({
-        varenavn: 'Dom Perignon',
-        varetype: 'Musserende',
-      } as IProduct);
+  const [isFetching, setIsFetching] = useState<Boolean>(false);
+  let filterOptions: FilterOptions = useSelector((state: AppState) => state.filterOptions);
+  let viewMode: ViewMode = useSelector((state: AppState) => state.viewMode);
+
+  const { data, loading, error, fetchMore } = useQuery<ProductsQuery>(PRODUCTS, {
+    variables: {
+      matchedString: searchText,
+      filterIndex: 0,
+      typer: filterGlobalToArray(filterOptions),
+      prisgt: filterOptions.minPrice,
+      prisls: filterOptions.maxPrice,
+      volumgt: filterOptions.minVolum,
+      volumls: filterOptions.maxVolum,
+      sortIndex: 1,
+    },
+  });
+
+  let loadMore = () => {
+    /*
+    fetchMore basically allows you to do a new GraphQL query and merge the result into the original result.
+    */
+    if (viewMode.initialLoad) {
+      dispatch(updateViewMode({ field: 'initialLoad', value: false }));
+      fetchMore({
+        variables: {
+          matchedString: searchText,
+          filterIndex: 0,
+          typer: filterGlobalToArray(filterOptions),
+          prisgt: filterOptions.minPrice,
+          prisls: filterOptions.maxPrice,
+          volumgt: filterOptions.minVolum,
+          volumls: filterOptions.maxVolum,
+          sortIndex: 1,
+        },
+        updateQuery: (prev: any, { fetchMoreResult }: any) => {
+          if (!fetchMoreResult) return prev;
+          return Object.assign({}, prev, {
+            products: [...fetchMoreResult.products],
+          });
+        },
+      });
+    } else {
+      fetchMore({
+        variables: {
+          matchedString: searchText,
+          filterIndex: data ? data.products.length : 0,
+          typer: filterGlobalToArray(filterOptions),
+          prisgt: filterOptions.minPrice,
+          prisls: filterOptions.maxPrice,
+          volumgt: filterOptions.minVolum,
+          volumls: filterOptions.maxVolum,
+          sortIndex: 1,
+        },
+        updateQuery: (prev: any, { fetchMoreResult }: any) => {
+          if (!fetchMoreResult) return prev;
+          return Object.assign({}, prev, {
+            products: [...prev.products, ...fetchMoreResult.products],
+          });
+        },
+      });
     }
-    setData(res);
+    setIsFetching(false);
+  };
+
+  const handleEndReached = () => {
+    dispatch(updateViewMode({ field: 'initialLoad', value: false }));
+    setIsFetching(true);
   };
 
   useEffect(() => {
-    dataGenerator();
-  }, []);
+    if (!isFetching) return;
+
+    loadMore();
+  }, [isFetching]);
+
+  useEffect(() => {
+    if (searchText === '' || !viewMode.initialLoad) {
+      return;
+    }
+    loadMore();
+  }, [searchText, filterOptions]);
+
+  if (loading) return <LoadingIndicator />;
 
   return (
     <DataTable style={styles.tableContainer}>
@@ -53,16 +131,16 @@ const ProductList: React.FC<IProductList> = ({ handleDetailNavigation }) => {
         <DataTable.Title numeric>Varetype</DataTable.Title>
       </DataTable.Header>
 
-      {data && (
+      {data && !loading && (
         <FlatList
           style={styles.flatList}
           onEndReachedThreshold={0.5}
-          onEndReached={() => console.log('END')}
-          data={data}
+          onEndReached={handleEndReached}
+          data={data.products}
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleDetailNavigation(item.varenavn)}>
-              <ProductListItem varenavn={item.varenavn} varetype={item.varetype} />
+            <TouchableOpacity onPress={() => handleDetailNavigation(item.Varenavn)}>
+              <ProductListItem varenavn={item.Varenavn} varetype={item.Varetype ?? ''} />
             </TouchableOpacity>
           )}
         />

@@ -47,7 +47,7 @@ function RootNavigator() {
         options={{
           title: 'Overview',
           headerTitle: 'Overview',
-          headerLeft: () => <Button title='yo' onPress={() => console.log('hallais')} />,
+          headerLeft: () => <Button title='Jassss' onPress={() => console.log('hallais')} />,
         }}
       />
       <Stack.Screen

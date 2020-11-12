@@ -1,10 +1,15 @@
-import React from 'react';
+import { useQuery } from '@apollo/client';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import ProductList from '../components/Overview/ProductList';
+import LoadingIndicator from '../components/Shared/LoadingIndicator';
+import { PRODUCTS } from '../graphql/queries';
+import { updateViewMode } from '../store/action';
+import { AppState, FilterOptions, ViewMode } from '../store/types';
+import { filterGlobalToArray, getProductType } from '../utils/product';
 
 const OverviewScreen = ({ navigation }: any) => {
-  console.log(navigation);
-
   const handleDetailNavigation = (varenummer: string) => {
     navigation.navigate('Detail');
   };

@@ -50,6 +50,7 @@ const PRODUCTS = gql`
     $volumgt: Float!
     $volumls: Float!
     $filterIndex: Int!
+    $sortIndex: Int!
   ) {
     products(
       searchSequence: $matchedString
@@ -59,6 +60,7 @@ const PRODUCTS = gql`
       volumgt: $volumgt
       volumls: $volumls
       index: $filterIndex
+      sortIndex: $sortIndex
     ) {
       Varenavn
       Varetype

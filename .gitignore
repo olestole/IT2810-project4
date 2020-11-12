@@ -10,5 +10,11 @@ npm-debug.*
 *.orig.*
 web-build/
 
+.env
+
 # macOS
 .DS_Store
+
+# Generated files
+generated/
+graphql-global-types.ts
