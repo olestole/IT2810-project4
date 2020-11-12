@@ -8,6 +8,8 @@ import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 import { AppContextProvider } from './context';
 import ApolloWrapper from './components/ApolloWrapper';
+import { Provider } from 'react-redux';
+import { store } from './store/reducer';
 
 const theme = {
   ...DefaultTheme,
@@ -27,14 +29,16 @@ export default function App() {
   } else {
     return (
       <ApolloWrapper>
-        <SafeAreaProvider>
-          <AppContextProvider>
-            <PaperProvider theme={theme}>
-              <Navigation colorScheme={colorScheme} />
-              <StatusBar />
-            </PaperProvider>
-          </AppContextProvider>
-        </SafeAreaProvider>
+        <Provider store={store}>
+          <SafeAreaProvider>
+            <AppContextProvider>
+              <PaperProvider theme={theme}>
+                <Navigation colorScheme={colorScheme} />
+                <StatusBar />
+              </PaperProvider>
+            </AppContextProvider>
+          </SafeAreaProvider>
+        </Provider>
       </ApolloWrapper>
     );
   }
