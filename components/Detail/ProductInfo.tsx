@@ -3,6 +3,9 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Product } from '../../types/types';
 
+import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 const baseURL = 'https://bilder.vinmonopolet.no/cache/800x800-0/';
 
 interface IProductInfo {
@@ -22,13 +25,29 @@ const ProductInfo: React.FC<IProductInfo> = ({ product }) => {
           {product.Varenavn}
         </Text>
       </ScrollView>
-      <Text>{product.Pris}kr</Text>
-      <Text>{product.Volum}</Text>
-      <Text>{product.Produsent}</Text>
-      <Text>{product.Farge}</Text>
-      <Text>{product.Land}</Text>
-      <Text>{product.Lukt}</Text>
-      <Text>{product.Smak}</Text>
+
+      <View>
+        <View style={styles.priceContainer}>
+          <View style={styles.priceContainer}>
+            <MaterialIcons name='attach-money' size={24} color='black' />
+            <Text style={styles.price}>{product.Pris}kr</Text>
+          </View>
+          <View style={styles.priceContainer}>
+            <MaterialCommunityIcons name='water-outline' size={24} color='black' />
+            <Text style={styles.price}>{product.Volum}L</Text>
+          </View>
+          <View style={styles.priceContainer}>
+            <MaterialIcons name='face' size={24} color='black' />
+            <Text style={styles.price}>{product.Produsent}</Text>
+          </View>
+        </View>
+        {/* <Text>{product.Volum}</Text>
+        <Text>{product.Produsent}</Text>
+        <Text>{product.Farge}</Text>
+        <Text>{product.Land}</Text>
+        <Text>{product.Lukt}</Text>
+        <Text>{product.Smak}</Text> */}
+      </View>
     </View>
   );
 };
@@ -39,12 +58,12 @@ const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
     // justifyContent: 'center',
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   imageContainer: {
-    marginTop: 20,
     height: 400,
     width: 250,
+    alignSelf: 'center',
   },
   image: {
     width: '100%',
@@ -52,11 +71,22 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   productName: {
-    margin: 15,
+    // margin: 15,
     fontSize: 20,
     fontWeight: '700',
     textDecorationLine: 'underline',
     overflow: 'hidden',
   },
-  headerContainer: {},
+  headerContainer: {
+    alignSelf: 'center',
+    marginVertical: 20,
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+  },
+  price: {
+    fontSize: 18,
+  },
 });

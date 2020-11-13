@@ -4,12 +4,11 @@ import { FlatList, StyleSheet, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DataTable } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { ProductsQuery } from '../../graphql/generated/ProductsQuery';
+import { ProductsQuery, ProductsQuery_products } from '../../graphql/generated/ProductsQuery';
 import { PRODUCTS } from '../../graphql/queries';
 import useProductList from '../../hooks/useProductList';
 import { updateViewMode } from '../../store/action';
 import { AppState, FilterOptions } from '../../store/types';
-import { Product } from '../../types/types';
 import { filterGlobalToArray } from '../../utils/product';
 import LoadingIndicator from '../Shared/LoadingIndicator';
 import ProductListItem from './ProductListItem';
@@ -30,7 +29,7 @@ const styles = StyleSheet.create({
 });
 
 interface IProductList {
-  handleDetailNavigation: (product: Product) => void;
+  handleDetailNavigation: (product: ProductsQuery_products) => void;
 }
 
 const ProductList: React.FC<IProductList> = ({ handleDetailNavigation }) => {

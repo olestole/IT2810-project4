@@ -8,13 +8,19 @@ import { AppState } from '../store/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { SingleProductQuery } from '../graphql/generated/SingleProductQuery';
 import ProductInfo from '../components/Detail/ProductInfo';
-import { Button, Modal, Portal } from 'react-native-paper';
+import { Button, Modal, Portal, Snackbar } from 'react-native-paper';
 import { setModalOpen } from '../store/action';
+import { AirbnbRating, Rating } from 'react-native-ratings';
+import ReviewModal from '../components/Detail/ReviewModal';
+import ProductReview from '../components/Detail/ProductReview';
 
 const DetailScreen = ({ navigation }: any) => {
+  const [visible, setVisible] = React.useState(false);
+  const onToggleSnackBar = () => setVisible(!visible);
+  const onDismissSnackBar = () => setVisible(false);
+
   const dispatch = useDispatch();
   const currentProduct = useSelector((state: AppState) => state.currentProduct);
-  const modalOpen = useSelector((state: AppState) => state.modalOpen);
 
   const { data, loading, error } = useQuery<SingleProductQuery>(GET_SINGLE_PRODUCT, {
     variables: { number: currentProduct ? currentProduct.Varenummer : '' },
@@ -26,18 +32,32 @@ const DetailScreen = ({ navigation }: any) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <ProductInfo product={currentProduct} />
-      <Portal>
-        <Modal
-          visible={modalOpen}
-          onDismiss={() => console.log('lukk')}
-          contentContainerStyle={styles.modal}
-        >
-          <Text>Example Modal. Click outside this area to dismiss.</Text>
-        </Modal>
-      </Portal>
-      <Button style={{ marginTop: 30 }} onPress={() => dispatch(setModalOpen(true))}>
-        Show
+      {/* <ReviewModal /> */}
+      <ProductReview onToggleSnackBar={onToggleSnackBar} />
+      <Button
+        style={styles.reviewButton}
+        icon='star-half'
+        mode='contained'
+        onPress={() => dispatch(setModalOpen(true))}
+      >
+        Legg til en anmeldelse
       </Button>
+
+      {/* <Button onPress={onToggleSnackBar}>{visible ? 'Hide' : 'Show'}</Button> */}
+      <Snackbar
+        duration={3000}
+        style={styles.snackbar}
+        visible={visible}
+        onDismiss={onDismissSnackBar}
+        action={{
+          label: 'Undo',
+          onPress: () => {
+            // Do something
+          },
+        }}
+      >
+        Hey there! I'm a Snackbar.
+      </Snackbar>
     </ScrollView>
   );
 };
@@ -47,8 +67,9 @@ export default DetailScreen;
 const styles = StyleSheet.create({
   container: {
     // flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    margin: 20,
   },
   title: {
     fontSize: 20,
@@ -68,5 +89,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     borderRadius: 6,
   },
-  modal: {},
+  rating: {
+    backgroundColor: 'blue',
+  },
+  reviewButton: {
+    marginVertical: 15,
+    width: 'auto',
+  },
+  snackbar: {
+    margin: 0,
+    backgroundColor: 'green',
+    color: '#fff',
+    position: 'absolute',
+    top: 0,
+  },
 });
