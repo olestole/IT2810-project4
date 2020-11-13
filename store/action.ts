@@ -1,4 +1,4 @@
-import { IReview, Product } from '../types';
+import { IReview, Product } from '../types/types';
 import { fieldAndBool, FilterDisplay, fieldAndNumber } from './types';
 
 export const setFilterMode = (boolValue: boolean) => {

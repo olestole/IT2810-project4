@@ -1,4 +1,4 @@
-import { IReview, Product } from '../types';
+import { Product, IReview } from '../types/types';
 
 export type AppState = {
   searchText: string;

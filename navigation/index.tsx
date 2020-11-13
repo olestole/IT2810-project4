@@ -7,7 +7,7 @@ import Header from '../components/Header';
 import DetailScreen from '../screens/DetailScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import OverviewScreen from '../screens/OverviewScreen';
-import { RootStackParamList } from '../types';
+import { RootStackParamList } from '../types/types';
 import LinkingConfiguration from './LinkingConfiguration';
 
 // If you are not familiar with React Navigation, we recommend going through the
@@ -30,11 +30,14 @@ function RootNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
+        cardStyle: {
+          backgroundColor: '#fff',
+        },
         headerTintColor: '#fff',
         headerStyle: {
           backgroundColor: colors.primary,
         },
-        headerLeft: () => <Button title='halla' onPress={() => console.log('hallais')} />,
+        // headerLeft: () => <Button title='halla' onPress={() => console.log('hallais')} />,
         // title: 'Hallais',
         // header: ({ scene, previous, navigation }) => (
         //   <Header scene={scene} previous={previous} navigation={navigation} />
@@ -47,7 +50,7 @@ function RootNavigator() {
         options={{
           title: 'Overview',
           headerTitle: 'Overview',
-          headerLeft: () => <Button title='Jassss' onPress={() => console.log('hallais')} />,
+          headerLeft: () => <Button title='Meny' onPress={() => console.log('hallais')} />,
         }}
       />
       <Stack.Screen
@@ -55,6 +58,7 @@ function RootNavigator() {
         component={DetailScreen}
         options={{
           headerTitle: 'Detail',
+          // headerLeft: () => <Button title='Tilbake' onPress={() => console.log('hm')} />,
         }}
       />
       <Stack.Screen name='NotFound' component={NotFoundScreen} options={{ title: 'Oops!' }} />
