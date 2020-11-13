@@ -1,31 +1,44 @@
 import { useQuery } from '@apollo/client';
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import LoadingIndicator from '../components/Shared/LoadingIndicator';
 import { GET_SINGLE_PRODUCT } from '../graphql';
 import { AppState } from '../store/types';
 import { useDispatch, useSelector } from 'react-redux';
+import { SingleProductQuery } from '../graphql/generated/SingleProductQuery';
+import ProductInfo from '../components/Detail/ProductInfo';
+import { Button, Modal, Portal } from 'react-native-paper';
+import { setModalOpen } from '../store/action';
 
 const DetailScreen = ({ navigation }: any) => {
-  const { data, loading, error } = useQuery(GET_SINGLE_PRODUCT, {
-    variables: { number: '255' },
-  });
+  const dispatch = useDispatch();
   const currentProduct = useSelector((state: AppState) => state.currentProduct);
   const modalOpen = useSelector((state: AppState) => state.modalOpen);
 
-  useEffect(() => {
-    console.log(currentProduct);
-  }, [currentProduct]);
+  const { data, loading, error } = useQuery<SingleProductQuery>(GET_SINGLE_PRODUCT, {
+    variables: { number: currentProduct ? currentProduct.Varenummer : '' },
+  });
 
+  if (error || !currentProduct) return <LoadingIndicator />;
   if (loading) return <LoadingIndicator />;
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate('Overview')}>
-        <Text>Detail-screen</Text>
-      </TouchableOpacity>
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <ProductInfo product={currentProduct} />
+      <Portal>
+        <Modal
+          visible={modalOpen}
+          onDismiss={() => console.log('lukk')}
+          contentContainerStyle={styles.modal}
+        >
+          <Text>Example Modal. Click outside this area to dismiss.</Text>
+        </Modal>
+      </Portal>
+      <Button style={{ marginTop: 30 }} onPress={() => dispatch(setModalOpen(true))}>
+        Show
+      </Button>
+    </ScrollView>
   );
 };
 
@@ -33,7 +46,7 @@ export default DetailScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -55,4 +68,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     borderRadius: 6,
   },
+  modal: {},
 });

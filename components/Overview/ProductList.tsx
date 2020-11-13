@@ -1,13 +1,15 @@
 import { useQuery } from '@apollo/client';
-import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import React from 'react';
+import { FlatList, StyleSheet, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DataTable } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProductsQuery } from '../../graphql/generated/ProductsQuery';
 import { PRODUCTS } from '../../graphql/queries';
+import useProductList from '../../hooks/useProductList';
 import { updateViewMode } from '../../store/action';
-import { AppState, FilterOptions, ViewMode } from '../../store/types';
+import { AppState, FilterOptions } from '../../store/types';
+import { Product } from '../../types/types';
 import { filterGlobalToArray } from '../../utils/product';
 import LoadingIndicator from '../Shared/LoadingIndicator';
 import ProductListItem from './ProductListItem';
@@ -27,22 +29,14 @@ const styles = StyleSheet.create({
   },
 });
 
-interface IProduct {
-  varenavn: string;
-  varetype: string;
-}
-
 interface IProductList {
-  handleDetailNavigation: (varenummer: string) => void;
+  handleDetailNavigation: (product: Product) => void;
 }
 
 const ProductList: React.FC<IProductList> = ({ handleDetailNavigation }) => {
-  const searchText: string = useSelector((state: AppState) => state.searchText);
   const dispatch = useDispatch();
-
-  const [isFetching, setIsFetching] = useState<Boolean>(false);
   let filterOptions: FilterOptions = useSelector((state: AppState) => state.filterOptions);
-  let viewMode: ViewMode = useSelector((state: AppState) => state.viewMode);
+  const searchText: string = useSelector((state: AppState) => state.searchText);
 
   const { data, loading, error, fetchMore } = useQuery<ProductsQuery>(PRODUCTS, {
     variables: {
@@ -57,70 +51,14 @@ const ProductList: React.FC<IProductList> = ({ handleDetailNavigation }) => {
     },
   });
 
-  let loadMore = () => {
-    /*
-    fetchMore basically allows you to do a new GraphQL query and merge the result into the original result.
-    */
-    if (viewMode.initialLoad) {
-      dispatch(updateViewMode({ field: 'initialLoad', value: false }));
-      fetchMore({
-        variables: {
-          matchedString: searchText,
-          filterIndex: 0,
-          typer: filterGlobalToArray(filterOptions),
-          prisgt: filterOptions.minPrice,
-          prisls: filterOptions.maxPrice,
-          volumgt: filterOptions.minVolum,
-          volumls: filterOptions.maxVolum,
-          sortIndex: 1,
-        },
-        updateQuery: (prev: any, { fetchMoreResult }: any) => {
-          if (!fetchMoreResult) return prev;
-          return Object.assign({}, prev, {
-            products: [...fetchMoreResult.products],
-          });
-        },
-      });
-    } else {
-      fetchMore({
-        variables: {
-          matchedString: searchText,
-          filterIndex: data ? data.products.length : 0,
-          typer: filterGlobalToArray(filterOptions),
-          prisgt: filterOptions.minPrice,
-          prisls: filterOptions.maxPrice,
-          volumgt: filterOptions.minVolum,
-          volumls: filterOptions.maxVolum,
-          sortIndex: 1,
-        },
-        updateQuery: (prev: any, { fetchMoreResult }: any) => {
-          if (!fetchMoreResult) return prev;
-          return Object.assign({}, prev, {
-            products: [...prev.products, ...fetchMoreResult.products],
-          });
-        },
-      });
-    }
-    setIsFetching(false);
-  };
+  const { isFetching, setIsFetching } = useProductList(data, fetchMore);
 
   const handleEndReached = () => {
     dispatch(updateViewMode({ field: 'initialLoad', value: false }));
     setIsFetching(true);
   };
 
-  useEffect(() => {
-    if (!isFetching) return;
-
-    loadMore();
-  }, [isFetching]);
-
-  useEffect(() => {
-    if (searchText === '' || !viewMode.initialLoad) {
-      return;
-    }
-    loadMore();
-  }, [searchText, filterOptions]);
+  if (error) return <Text>Noe gikk feil</Text>;
 
   if (loading) return <LoadingIndicator />;
 
@@ -139,7 +77,7 @@ const ProductList: React.FC<IProductList> = ({ handleDetailNavigation }) => {
           data={data.products}
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleDetailNavigation(item.Varenavn)}>
+            <TouchableOpacity onPress={() => handleDetailNavigation(item)}>
               <ProductListItem varenavn={item.Varenavn} varetype={item.Varetype ?? ''} />
             </TouchableOpacity>
           )}

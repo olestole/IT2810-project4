@@ -7,7 +7,7 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ProfileScreen from '../screens/ProfileScreen';
 import TabOneScreen from '../screens/TabOneScreen';
-import { BottomTabParamList, ProfileParamList, TabOneParamList, TabTwoParamList } from '../types';
+import { BottomTabParamList, ProfileParamList, TabOneParamList } from '../types/types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 

@@ -5,13 +5,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import ProductList from '../components/Overview/ProductList';
 import LoadingIndicator from '../components/Shared/LoadingIndicator';
 import { PRODUCTS } from '../graphql/queries';
-import { updateViewMode } from '../store/action';
+import { setCurrentProduct, updateViewMode } from '../store/action';
 import { AppState, FilterOptions, ViewMode } from '../store/types';
+import { Product } from '../types/types';
 import { filterGlobalToArray, getProductType } from '../utils/product';
 
 const OverviewScreen = ({ navigation }: any) => {
-  const handleDetailNavigation = (varenummer: string) => {
+  const dispatch = useDispatch();
+
+  const handleDetailNavigation = (product: Product) => {
     navigation.navigate('Detail');
+    dispatch(setCurrentProduct(product));
   };
 
   return (

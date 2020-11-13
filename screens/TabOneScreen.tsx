@@ -30,7 +30,6 @@ export default function TabOneScreen() {
       <Button icon='camera' mode='contained' color={colors.primary}>
         Halla
       </Button>
-      <ProductList />
     </View>
   );
 }
