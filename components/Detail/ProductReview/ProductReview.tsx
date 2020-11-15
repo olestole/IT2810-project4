@@ -1,33 +1,16 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutation } from '@apollo/client';
-import { AppState } from '../../store/types';
-import { AddReviewMutation } from '../../graphql/generated/AddReviewMutation';
-import { ADD_REVIEW } from '../../graphql';
-import { InputReview } from '../../types/graphql-global-types';
-import { setAddedReview, setModalOpen } from '../../store/action';
+import { AppState } from '../../../store/types';
+import { AddReviewMutation } from '../../../graphql/generated/AddReviewMutation';
+import { ADD_REVIEW } from '../../../graphql';
+import { InputReview } from '../../../types/graphql-global-types';
+import { setAddedReview, setModalOpen } from '../../../store/action';
 import ReviewModal from './ReviewModal';
 import { Button } from 'react-native-paper';
+import { StyleSheet } from 'react-native';
 import ReviewRating from './ReviewRating';
-import ReviewInput, { ReviewDescription, ReviewTitle } from './ReviewInput';
-
-// const useStyles = makeStyles(() =>
-//   createStyles({
-//     headerLine: {
-//       display: 'flex',
-//       justifyContent: 'space-between',
-//       alignItems: 'center',
-//       flexWrap: 'wrap',
-//       marginBottom: 10,
-//       padding: 0,
-//     },
-//     button: {
-//       width: '100%',
-//       marginTop: 10,
-//       backgroundColor: 'var(--primary)',
-//     },
-//   }),
-// );
+import { ReviewDescription, ReviewTitle } from './ReviewInput';
 
 const ProductReview = ({ onToggleSnackBar }: any) => {
   const currentProduct = useSelector((state: AppState) => state.currentProduct);
@@ -43,7 +26,7 @@ const ProductReview = ({ onToggleSnackBar }: any) => {
   const submitReview = async () => {
     const review = {
       // TODO: Do something with userEmail
-      userEmail: 'Hmmmm',
+      userEmail: 'oleastole@gmail.com',
       varenummer: currentProduct!.Varenummer,
       title: reviewTitle,
       description: description,
@@ -62,6 +45,8 @@ const ProductReview = ({ onToggleSnackBar }: any) => {
     onToggleSnackBar();
     // If any of the fields haven't been filled out
     if (!currentProduct) {
+      onToggleSnackBar();
+
       // toast.error(`Produktet ser ikke ut til å ha lastet korrekt, forsøk pånytt`);
       return;
     }
@@ -71,6 +56,7 @@ const ProductReview = ({ onToggleSnackBar }: any) => {
     } else {
       await submitReview();
       // toast.success('Anmeldelsen er registrert🦄');
+      onToggleSnackBar();
       dispatch(setModalOpen(false));
 
       setRating(0);
@@ -93,11 +79,15 @@ const ProductReview = ({ onToggleSnackBar }: any) => {
         setDescription={setDescription}
         inputError={inputError}
       />
-      <Button mode='contained' onPress={handleSubmitReview}>
+      <Button style={styles.saveButton} mode='contained' onPress={handleSubmitReview}>
         Lagre anmeldelse
       </Button>
     </ReviewModal>
   );
 };
+
+const styles = StyleSheet.create({
+  saveButton: {},
+});
 
 export default ProductReview;

@@ -1,31 +1,9 @@
-import { useQuery } from '@apollo/client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import ProductList from '../components/Overview/ProductList';
-import LoadingIndicator from '../components/Shared/LoadingIndicator';
-import { PRODUCTS } from '../graphql/queries';
-import { setCurrentProduct, updateViewMode } from '../store/action';
-import { AppState, FilterOptions, ViewMode } from '../store/types';
+import { setCurrentProduct } from '../store/action';
 import { Product } from '../types/types';
-import { filterGlobalToArray, getProductType } from '../utils/product';
-
-const OverviewScreen = ({ navigation }: any) => {
-  const dispatch = useDispatch();
-
-  const handleDetailNavigation = (product: Product) => {
-    navigation.navigate('Detail');
-    dispatch(setCurrentProduct(product));
-  };
-
-  return (
-    <View style={styles.container}>
-      <ProductList handleDetailNavigation={handleDetailNavigation} />
-    </View>
-  );
-};
-
-export default OverviewScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -53,3 +31,20 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
 });
+
+const OverviewScreen = ({ navigation }: any) => {
+  const dispatch = useDispatch();
+
+  const handleDetailNavigation = (product: Product) => {
+    navigation.navigate('Detail');
+    dispatch(setCurrentProduct(product));
+  };
+
+  return (
+    <View style={styles.container}>
+      <ProductList handleDetailNavigation={handleDetailNavigation} />
+    </View>
+  );
+};
+
+export default OverviewScreen;

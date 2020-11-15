@@ -1,75 +1,25 @@
 import { useQuery } from '@apollo/client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import LoadingIndicator from '../components/Shared/LoadingIndicator';
-import { GET_SINGLE_PRODUCT } from '../graphql';
+import { GET_REVIEWS, GET_SINGLE_PRODUCT } from '../graphql';
 import { AppState } from '../store/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { SingleProductQuery } from '../graphql/generated/SingleProductQuery';
 import ProductInfo from '../components/Detail/ProductInfo';
-import { Button, Modal, Portal, Snackbar } from 'react-native-paper';
+import { Button, Snackbar } from 'react-native-paper';
 import { setModalOpen } from '../store/action';
-import { AirbnbRating, Rating } from 'react-native-ratings';
-import ReviewModal from '../components/Detail/ReviewModal';
-import ProductReview from '../components/Detail/ProductReview';
-
-const DetailScreen = ({ navigation }: any) => {
-  const [visible, setVisible] = React.useState(false);
-  const onToggleSnackBar = () => setVisible(!visible);
-  const onDismissSnackBar = () => setVisible(false);
-
-  const dispatch = useDispatch();
-  const currentProduct = useSelector((state: AppState) => state.currentProduct);
-
-  const { data, loading, error } = useQuery<SingleProductQuery>(GET_SINGLE_PRODUCT, {
-    variables: { number: currentProduct ? currentProduct.Varenummer : '' },
-  });
-
-  if (error || !currentProduct) return <LoadingIndicator />;
-  if (loading) return <LoadingIndicator />;
-
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <ProductInfo product={currentProduct} />
-      {/* <ReviewModal /> */}
-      <ProductReview onToggleSnackBar={onToggleSnackBar} />
-      <Button
-        style={styles.reviewButton}
-        icon='star-half'
-        mode='contained'
-        onPress={() => dispatch(setModalOpen(true))}
-      >
-        Legg til en anmeldelse
-      </Button>
-
-      {/* <Button onPress={onToggleSnackBar}>{visible ? 'Hide' : 'Show'}</Button> */}
-      <Snackbar
-        duration={3000}
-        style={styles.snackbar}
-        visible={visible}
-        onDismiss={onDismissSnackBar}
-        action={{
-          label: 'Undo',
-          onPress: () => {
-            // Do something
-          },
-        }}
-      >
-        Hey there! I'm a Snackbar.
-      </Snackbar>
-    </ScrollView>
-  );
-};
-
-export default DetailScreen;
+import { ProductReview } from '../components/Detail/ProductReview';
+import ReviewList from '../components/Shared/ProductReview/ReviewList';
+import { IReview } from '../types/types';
+import { GetReviewsQuery } from '../graphql/generated/GetReviewsQuery';
+import ErrorIndicator from '../components/Shared/ErrorIndicator';
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
     margin: 20,
+    // flex: 1,
   },
   title: {
     fontSize: 20,
@@ -104,3 +54,63 @@ const styles = StyleSheet.create({
     top: 0,
   },
 });
+
+const DetailScreen = ({ navigation }: any) => {
+  const [visible, setVisible] = React.useState(false);
+  const onToggleSnackBar = () => setVisible(!visible);
+  const onDismissSnackBar = () => setVisible(false);
+
+  const dispatch = useDispatch();
+  const currentProduct = useSelector((state: AppState) => state.currentProduct);
+
+  const { data: reviewData, loading, error } = useQuery<GetReviewsQuery>(GET_REVIEWS, {
+    variables: { reviewsVarenummer: currentProduct ? currentProduct.Varenummer : '' },
+    fetchPolicy: 'network-only',
+  });
+
+  if (error || !currentProduct) return <ErrorIndicator />;
+  if (loading || loading) return <LoadingIndicator />;
+
+  return (
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+      nestedScrollEnabled={true}
+    >
+      <ProductInfo product={currentProduct} />
+      <ProductReview onToggleSnackBar={onToggleSnackBar} />
+      <Button
+        style={styles.reviewButton}
+        icon='star-half'
+        mode='contained'
+        onPress={() => dispatch(setModalOpen(true))}
+      >
+        Legg til en anmeldelse
+      </Button>
+
+      {loading ? (
+        <Text>Laster anmeldelser</Text>
+      ) : (
+        <ReviewList reviews={reviewData ? (reviewData.reviews as IReview[]) : []} />
+      )}
+
+      {/* <Button onPress={onToggleSnackBar}>{visible ? 'Hide' : 'Show'}</Button> */}
+      <Snackbar
+        duration={3000}
+        style={styles.snackbar}
+        visible={visible}
+        onDismiss={onDismissSnackBar}
+        action={{
+          label: 'Undo',
+          onPress: () => {
+            // Do something
+          },
+        }}
+      >
+        Hey there! I'm a Snackbar.
+      </Snackbar>
+    </ScrollView>
+  );
+};
+
+export default DetailScreen;

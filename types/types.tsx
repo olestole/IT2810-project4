@@ -25,13 +25,13 @@ export interface Product {
   Varenavn: string;
   Varenummer: string;
   Varetype: string;
+  Produsent: string;
   Volum: number;
   Pris: number;
-  Produsent: string;
-  Land: string;
-  Farge: string;
-  Lukt: string;
-  Smak: string;
+  Land?: string;
+  Farge?: string;
+  Lukt?: string;
+  Smak?: string;
 }
 
 export interface IReview {
