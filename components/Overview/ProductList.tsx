@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
+import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { FlatList, StyleSheet, Text } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DataTable } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +10,9 @@ import { PRODUCTS } from '../../graphql/queries';
 import useProductList from '../../hooks/useProductList';
 import { updateViewMode } from '../../store/action';
 import { AppState, FilterOptions } from '../../store/types';
+import { Product } from '../../types/types';
 import { filterGlobalToArray } from '../../utils/product';
+import ErrorIndicator from '../Shared/ErrorIndicator';
 import LoadingIndicator from '../Shared/LoadingIndicator';
 import ProductListItem from './ProductListItem';
 
@@ -29,7 +32,7 @@ const styles = StyleSheet.create({
 });
 
 interface IProductList {
-  handleDetailNavigation: (product: ProductsQuery_products) => void;
+  handleDetailNavigation: (product: Product) => void;
 }
 
 const ProductList: React.FC<IProductList> = ({ handleDetailNavigation }) => {
@@ -57,8 +60,7 @@ const ProductList: React.FC<IProductList> = ({ handleDetailNavigation }) => {
     setIsFetching(true);
   };
 
-  if (error) return <Text>Noe gikk feil</Text>;
-
+  if (error) return <ErrorIndicator />;
   if (loading) return <LoadingIndicator />;
 
   return (
@@ -76,7 +78,7 @@ const ProductList: React.FC<IProductList> = ({ handleDetailNavigation }) => {
           data={data.products}
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleDetailNavigation(item)}>
+            <TouchableOpacity onPress={() => handleDetailNavigation(item as Product)}>
               <ProductListItem varenavn={item.Varenavn} varetype={item.Varetype ?? ''} />
             </TouchableOpacity>
           )}

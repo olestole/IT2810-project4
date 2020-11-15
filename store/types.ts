@@ -1,3 +1,4 @@
+import { GetReviewsQuery_reviews } from '../graphql/generated/GetReviewsQuery';
 import { Product, IReview } from '../types/types';
 
 export type AppState = {

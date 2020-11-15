@@ -1,12 +1,13 @@
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import { Button, ColorSchemeName } from 'react-native';
-import { useTheme } from 'react-native-paper';
-import Header from '../components/Header';
+import { ColorSchemeName } from 'react-native';
+import { Button, IconButton, useTheme } from 'react-native-paper';
+import { useDispatch } from 'react-redux';
 import DetailScreen from '../screens/DetailScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import OverviewScreen from '../screens/OverviewScreen';
+import { setAddedReview, setCurrentProduct } from '../store/action';
 import { RootStackParamList } from '../types/types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -27,6 +28,14 @@ const Stack = createStackNavigator<RootStackParamList>();
 function RootNavigator() {
   const { colors } = useTheme();
 
+  const dispatch = useDispatch();
+
+  const handleDetailBack = (navigation: any) => {
+    navigation.navigate('Overview');
+    dispatch(setCurrentProduct(null));
+    dispatch(setAddedReview(null));
+  };
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -37,29 +46,37 @@ function RootNavigator() {
         headerStyle: {
           backgroundColor: colors.primary,
         },
-        // headerLeft: () => <Button title='halla' onPress={() => console.log('hallais')} />,
-        // title: 'Hallais',
-        // header: ({ scene, previous, navigation }) => (
-        //   <Header scene={scene} previous={previous} navigation={navigation} />
-        // ),
       }}
     >
       <Stack.Screen
         name='Overview'
         component={OverviewScreen}
-        options={{
+        options={({ navigation }) => ({
           title: 'Overview',
           headerTitle: 'Overview',
-          headerLeft: () => <Button title='Meny' onPress={() => console.log('hallais')} />,
-        }}
+          headerLeft: () => (
+            <IconButton color='white' icon='menu' onPress={() => console.log('Meny')}>
+              Tilbake
+            </IconButton>
+          ),
+        })}
       />
       <Stack.Screen
         name='Detail'
         component={DetailScreen}
-        options={{
+        options={({ route, navigation }) => ({
           headerTitle: 'Detail',
-          // headerLeft: () => <Button title='Tilbake' onPress={() => console.log('hm')} />,
-        }}
+          headerLeft: () => (
+            <Button
+              compact
+              color='white'
+              icon='keyboard-backspace'
+              onPress={() => handleDetailBack(navigation)}
+            >
+              Tilbake
+            </Button>
+          ),
+        })}
       />
       <Stack.Screen name='NotFound' component={NotFoundScreen} options={{ title: 'Oops!' }} />
     </Stack.Navigator>

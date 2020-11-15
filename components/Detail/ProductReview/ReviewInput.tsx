@@ -2,7 +2,16 @@ import React from 'react';
 import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  titleInput: {
+    marginBottom: 20,
+  },
+  descriptionInput: {
+    marginTop: 20,
+    marginBottom: 5,
+    maxHeight: '60%',
+  },
+});
 
 interface IProductInput {
   description: string;
@@ -17,6 +26,7 @@ export const ReviewDescription: React.FC<IProductInput> = ({
 }) => {
   return (
     <TextInput
+      style={styles.descriptionInput}
       blurOnSubmit
       label='Beskrivelse av produktet'
       multiline
@@ -44,6 +54,7 @@ export const ReviewTitle: React.FC<IReviewTitle> = ({
   };
   return (
     <TextInput
+      style={styles.titleInput}
       label='Tittel på anmeldelse'
       mode='outlined'
       defaultValue={reviewTitle}
