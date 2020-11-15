@@ -46,7 +46,7 @@ const initialAppState: AppState = {
     maxVolum: 10,
     minPrice: 0,
     maxPrice: 2000000,
-    sortIndex: -1,
+    sortIndex: 1,
   },
   viewMode: {
     initialLoad: false,

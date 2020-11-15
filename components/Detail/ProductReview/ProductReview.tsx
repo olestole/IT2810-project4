@@ -25,8 +25,8 @@ const ProductReview = ({ onToggleSnackBar }: any) => {
 
   const submitReview = async () => {
     const review = {
-      // TODO: Do something with userEmail
-      userEmail: 'oleastole@gmail.com',
+      // The userEmail is set like this because I don't implement Auth0 the same way as in project3, while reusing most of the backend
+      userEmail: 'test@prosjekt4.com',
       varenummer: currentProduct!.Varenummer,
       title: reviewTitle,
       description: description,
