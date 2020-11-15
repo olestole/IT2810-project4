@@ -1,5 +1,5 @@
 import { IReview, Product } from '../types/types';
-import { fieldAndBool, FilterDisplay, fieldAndNumber } from './types';
+import { fieldAndBool, FilterDisplay, fieldAndNumber, sortIndexType } from './types';
 
 export const setFilterMode = (boolValue: boolean) => {
   return {
@@ -47,6 +47,12 @@ export const filterVolumAndPrice = (fieldAndNumber: fieldAndNumber) => {
   return {
     type: 'FILTER_RANGE',
     payload: fieldAndNumber,
+  } as const;
+};
+
+export const toggleSortIndex = () => {
+  return {
+    type: 'TOGGLE_SORTINDEX',
   } as const;
 };
 

@@ -11,6 +11,7 @@ import {
   updateFilterDisplay,
   resetFilter,
   setAddedReview,
+  toggleSortIndex,
 } from './action';
 
 type Actions =
@@ -23,7 +24,8 @@ type Actions =
   | ReturnType<typeof updateViewMode>
   | ReturnType<typeof updateFilterDisplay>
   | ReturnType<typeof resetFilter>
-  | ReturnType<typeof setAddedReview>;
+  | ReturnType<typeof setAddedReview>
+  | ReturnType<typeof toggleSortIndex>;
 
 const initialAppState: AppState = {
   searchText: '',
@@ -44,6 +46,7 @@ const initialAppState: AppState = {
     maxVolum: 10,
     minPrice: 0,
     maxPrice: 2000000,
+    sortIndex: -1,
   },
   viewMode: {
     initialLoad: false,
@@ -92,6 +95,15 @@ const rootReducer = (state: AppState = initialAppState, action: Actions) => {
         filterOptions: {
           ...state.filterOptions,
           [action.payload.field]: action.payload.value,
+        },
+      };
+
+    case 'TOGGLE_SORTINDEX':
+      return {
+        ...state,
+        filterOptions: {
+          ...state.filterOptions,
+          sortIndex: state.filterOptions.sortIndex === 1 ? -1 : 1,
         },
       };
     case 'UPDATE_VIEW_MODE':
@@ -151,7 +163,7 @@ const neverReached = (never: never) => {};
 function configureStore(): Store<AppState> {
   return createStore(
     rootReducer,
-    (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__(),
+    (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()
   );
 }
 

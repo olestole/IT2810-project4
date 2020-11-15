@@ -2,13 +2,13 @@ import { useQuery } from '@apollo/client';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { DataTable } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProductsQuery, ProductsQuery_products } from '../../graphql/generated/ProductsQuery';
 import { PRODUCTS } from '../../graphql/queries';
 import useProductList from '../../hooks/useProductList';
-import { updateViewMode } from '../../store/action';
+import { toggleSortIndex, updateViewMode } from '../../store/action';
 import { AppState, FilterOptions } from '../../store/types';
 import { Product } from '../../types/types';
 import { filterGlobalToArray } from '../../utils/product';
@@ -28,6 +28,14 @@ const styles = StyleSheet.create({
   },
   tableContainer: {
     width: '100%',
+  },
+  sortContainer: {
+    flexDirection: 'row',
+    marginTop: 5,
+    padding: 0,
+  },
+  varenavn: {
+    marginLeft: 8,
   },
 });
 
@@ -49,7 +57,7 @@ const ProductList: React.FC<IProductList> = ({ handleDetailNavigation }) => {
       prisls: filterOptions.maxPrice,
       volumgt: filterOptions.minVolum,
       volumls: filterOptions.maxVolum,
-      sortIndex: 1,
+      sortIndex: filterOptions.sortIndex,
     },
   });
 
@@ -66,8 +74,24 @@ const ProductList: React.FC<IProductList> = ({ handleDetailNavigation }) => {
   return (
     <DataTable style={styles.tableContainer}>
       <DataTable.Header style={styles.tableHeader}>
-        <DataTable.Title>Varenavn</DataTable.Title>
-        <DataTable.Title numeric>Varetype</DataTable.Title>
+        <DataTable.Title>
+          <TouchableOpacity
+            style={styles.sortContainer}
+            onPress={() => dispatch(toggleSortIndex())}
+          >
+            <FontAwesome5
+              name={filterOptions.sortIndex === 1 ? 'sort-alpha-down' : 'sort-alpha-up'}
+              size={15}
+              color='black'
+            />
+            <Text style={styles.varenavn}>Varenavn</Text>
+          </TouchableOpacity>
+        </DataTable.Title>
+        <DataTable.Title numeric>
+          <TouchableWithoutFeedback style={styles.sortContainer}>
+            <Text>Varetype</Text>
+          </TouchableWithoutFeedback>
+        </DataTable.Title>
       </DataTable.Header>
 
       {data && !loading && (

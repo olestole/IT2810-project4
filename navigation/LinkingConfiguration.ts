@@ -8,6 +8,7 @@ export default {
         screens: {
           ProductOverview: 'overview',
           ProductDetail: 'detail',
+          OverviewNavigator: 'OverviewNavigator',
         },
       },
       Profile: {

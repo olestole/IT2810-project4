@@ -16,6 +16,7 @@ export type FilterOptions = {
   maxVolum: number;
   minPrice: number;
   maxPrice: number;
+  sortIndex: number;
 };
 
 export type Kategorier = {
