@@ -1,19 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState, FilterOptions } from '../../store/types';
-import { filter, filterVolumAndPrice } from '../../store/action';
-import { List } from 'react-native-paper';
+import { filter, filterVolumAndPrice, setSearchText, updateViewMode } from '../../store/action';
+import { Chip, Divider, List, TextInput, useTheme } from 'react-native-paper';
 import { CheckBox } from 'react-native-elements';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
+import { useEffect } from 'react';
+import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
     margin: 15,
     justifyContent: 'center',
-    // alignItems: 'center',
   },
   appMenu: {},
   checkBox: {
@@ -22,45 +23,14 @@ const styles = StyleSheet.create({
     margin: 0,
     padding: 2,
   },
+  searchField: {},
+  divider: {
+    marginVertical: 30,
+  },
+  searchChip: {
+    marginTop: 10,
+  },
 });
-
-const getPriceRange = (price: number) => {
-  switch (price) {
-    case 0: {
-      return [0, 500000];
-    }
-    case 1: {
-      return [1, 100];
-    }
-    case 100: {
-      return [100, 150];
-    }
-    case 150: {
-      return [150, 200];
-    }
-    case 200: {
-      return [200, 300];
-    }
-    case 300: {
-      return [300, 500];
-    }
-    case 500: {
-      return [500, 750];
-    }
-    case 750: {
-      return [750, 1000];
-    }
-    case 1000: {
-      return [1000, 5000];
-    }
-    case 5000: {
-      return [5000, 500000];
-    }
-    default: {
-      return [0, 500000];
-    }
-  }
-};
 
 const categories = {
   rodvin: 'Rødvin',
@@ -92,80 +62,109 @@ const renderCheckboxes = (
   ));
 };
 
-const Filter = () => {
+const Filter = ({ navigation }: any) => {
+  const dispatch = useDispatch();
+  const { colors } = useTheme();
+  let filterOptions: FilterOptions = useSelector((state: AppState) => state.filterOptions);
+  let searchText: string = useSelector((state: AppState) => state.searchText);
+
+  const [searchInput, setSearchInput] = React.useState('');
   const [volumeInput, setVolumeInput] = React.useState(6);
   const [priceInput, setPriceInput] = React.useState(60000);
-  const [volumRange, setVolumeRange] = React.useState<number[]>([0, 6]);
-  const [openCategory, setOpenCategory] = React.useState<boolean>(false);
-  const [openVolume, setOpenVolume] = React.useState<boolean>(false);
-  const [openPrice, setOpenPrice] = React.useState<boolean>(false);
-  let filterOptions: FilterOptions = useSelector((state: AppState) => state.filterOptions);
-  const dispatch = useDispatch();
 
-  let handleClick = (func: any, openValue: boolean) => {
-    func(!openValue);
+  const handleSearchSubmit = () => {
+    dispatch(setSearchText(searchInput));
+    dispatch(updateViewMode({ field: 'initialLoad', value: true }));
+    setSearchInput('');
+    navigation.toggleDrawer();
   };
 
-  const changeVolumeRange = (event: any, newValue: number) => {};
-
-  const handleLocalVolumeChange = (event: any, newValue: number | number[]) => {
-    setVolumeRange(newValue as number[]);
+  const handleDelete = () => {
+    dispatch(setSearchText(''));
+    dispatch(updateViewMode({ field: 'initialLoad', value: true }));
   };
 
-  const handlePChange = (n: number) => {
-    dispatch(filterVolumAndPrice({ field: 'minPrice', value: getPriceRange(n)[0] }));
-    dispatch(filterVolumAndPrice({ field: 'maxPrice', value: getPriceRange(n)[1] }));
+  const activeCategoryFilters = () => {
+    return Object.values(filterOptions.kategorier)
+      .filter((value) => value)
+      .length.toString();
   };
 
   return (
-    <View style={styles.rootContainer}>
-      <List.AccordionGroup>
-        <List.Accordion
-          title='Kategorier'
-          id='1'
-          left={() => <MaterialCommunityIcons name='bottle-wine' size={24} color='black' />}
-        >
-          {renderCheckboxes(categories, dispatch, filterOptions)}
-        </List.Accordion>
-        <List.Accordion
-          title={`Max volum: ${volumeInput.toPrecision(2)}L`}
-          id='2'
-          left={() => <MaterialCommunityIcons name='water-outline' size={24} color='black' />}
-          style={{ width: '100%' }}
-        >
-          <Slider
-            style={{ width: '90%', alignSelf: 'center', padding: 0 }}
-            value={volumeInput}
-            minimumValue={0}
-            maximumValue={6}
-            step={0.1}
-            onSlidingComplete={() =>
-              dispatch(filterVolumAndPrice({ field: 'maxVolum', value: volumeInput }))
-            }
-            onValueChange={(e) => setVolumeInput(e)}
-          />
-        </List.Accordion>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.rootContainer}>
         <View>
+          <TextInput
+            dense={true}
+            style={styles.searchField}
+            blurOnSubmit
+            label='Søk på ønsket produkt'
+            multiline
+            mode='outlined'
+            value={searchInput}
+            onChangeText={(value) => setSearchInput(value)}
+            onBlur={() => Keyboard.dismiss()}
+            onSubmitEditing={handleSearchSubmit}
+          />
+          {searchText !== '' && (
+            <Chip
+              icon='close'
+              onPress={() => handleDelete()}
+              style={[styles.searchChip, { backgroundColor: colors.accent }]}
+            >
+              {searchText}
+            </Chip>
+          )}
+        </View>
+        <Divider style={styles.divider} />
+        <List.AccordionGroup>
           <List.Accordion
-            title={`Max pris: ${priceInput}kr`}
-            id='3'
-            left={() => <MaterialIcons name='attach-money' size={24} color='black' />}
+            title={`Kategorier [${activeCategoryFilters()}]`}
+            id='1'
+            left={() => <MaterialCommunityIcons name='bottle-wine' size={24} color='black' />}
+          >
+            {renderCheckboxes(categories, dispatch, filterOptions)}
+          </List.Accordion>
+          <List.Accordion
+            title={`Max volum: ${volumeInput.toPrecision(2)}L`}
+            id='2'
+            left={() => <MaterialCommunityIcons name='water-outline' size={24} color='black' />}
+            style={{ width: '100%' }}
           >
             <Slider
               style={{ width: '90%', alignSelf: 'center', padding: 0 }}
-              value={priceInput}
+              value={volumeInput}
               minimumValue={0}
-              maximumValue={50000}
-              step={25}
+              maximumValue={6}
+              step={0.1}
               onSlidingComplete={() =>
-                dispatch(filterVolumAndPrice({ field: 'maxPrice', value: priceInput }))
+                dispatch(filterVolumAndPrice({ field: 'maxVolum', value: volumeInput }))
               }
-              onValueChange={(e) => setPriceInput(e)}
+              onValueChange={(e) => setVolumeInput(e)}
             />
           </List.Accordion>
-        </View>
-      </List.AccordionGroup>
-    </View>
+          <View>
+            <List.Accordion
+              title={`Max pris: ${priceInput}kr`}
+              id='3'
+              left={() => <MaterialIcons name='attach-money' size={24} color='black' />}
+            >
+              <Slider
+                style={{ width: '90%', alignSelf: 'center', padding: 0 }}
+                value={priceInput}
+                minimumValue={0}
+                maximumValue={50000}
+                step={25}
+                onSlidingComplete={() =>
+                  dispatch(filterVolumAndPrice({ field: 'maxPrice', value: priceInput }))
+                }
+                onValueChange={(e) => setPriceInput(e)}
+              />
+            </List.Accordion>
+          </View>
+        </List.AccordionGroup>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

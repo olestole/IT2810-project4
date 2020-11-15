@@ -20,6 +20,7 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import Filter from '../components/Drawer/Filter';
+import { useEffect } from 'react';
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
@@ -49,7 +50,7 @@ const OverviewNavigator = () => {
 
   return (
     <Drawer.Navigator
-      drawerContent={() => <Filter />}
+      drawerContent={(props) => <Filter {...props} />}
       sceneContainerStyle={{ backgroundColor: colors.background }}
       drawerStyle={{
         backgroundColor: colors.background,
@@ -72,12 +73,17 @@ const OverviewNavigator = () => {
               Tilbake
             </IconButton>
           ),
+          headerRight: () => (
+            <IconButton color='white' icon='magnify' onPress={() => navigation.toggleDrawer()}>
+              Tilbake
+            </IconButton>
+          ),
         })}
       />
       <Stack.Screen
         name='Detail'
         component={DetailScreen}
-        options={({ route, navigation }) => ({
+        options={({ navigation }) => ({
           headerTitle: 'Detail',
 
           headerLeft: () => (
