@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 import { DataTable } from 'react-native-paper';
 
 interface IProductListItem {
@@ -9,7 +9,7 @@ interface IProductListItem {
 
 const ProductListItem: React.FC<IProductListItem> = ({ varenavn, varetype }) => {
   return (
-    <View style={styles.container}>
+    <View>
       <DataTable.Row>
         <DataTable.Cell>{varenavn}</DataTable.Cell>
         <DataTable.Cell numeric>{varetype}</DataTable.Cell>
@@ -19,11 +19,3 @@ const ProductListItem: React.FC<IProductListItem> = ({ varenavn, varetype }) => 
 };
 
 export default ProductListItem;
-
-const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    // flexDirection: 'row',
-    // justifyContent: 'space-between',
-  },
-});

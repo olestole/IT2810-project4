@@ -41,10 +41,6 @@ const styles = StyleSheet.create({
   icon: {
     color: 'gold',
     margin: 0,
-    // '& > *': {
-    //   width: 30,
-    //   height: 30,
-    // },
   },
 });
 

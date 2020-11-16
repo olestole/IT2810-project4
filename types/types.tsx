@@ -7,7 +7,6 @@ export type RootStackParamList = {
 
 export type BottomTabParamList = {
   Overview: undefined;
-  Profile: undefined;
 };
 
 export type TabOneParamList = {
@@ -16,10 +15,6 @@ export type TabOneParamList = {
 
 export type TabTwoParamList = {
   TabTwoScreen: undefined;
-};
-
-export type ProfileParamList = {
-  Profile: undefined;
 };
 
 export interface Product {

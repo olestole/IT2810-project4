@@ -1,5 +1,5 @@
 import React from 'react';
-import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-paper';
 
 const styles = StyleSheet.create({

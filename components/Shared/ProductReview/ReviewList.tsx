@@ -1,12 +1,11 @@
 import { ApolloError } from '@apollo/client';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { FlatList, View } from 'react-native';
+import { View } from 'react-native';
 import { AppState } from '../../../store/types';
 import { IReview } from '../../../types/types';
 import DefaultItem from './DefaultItem';
 import ReviewItem from './ReviewItem';
-import { ScrollView } from 'react-native-gesture-handler';
 
 interface IReviewList {
   reviews: IReview[];
@@ -14,7 +13,7 @@ interface IReviewList {
   user?: any;
 }
 
-const ReviewList: React.FC<IReviewList> = ({ reviews, error, user }) => {
+const ReviewList: React.FC<IReviewList> = ({ reviews, error }) => {
   const addedReview = useSelector((state: AppState) => state.addedReview);
 
   const renderReviews = () => {

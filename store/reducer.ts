@@ -141,6 +141,7 @@ const rootReducer = (state: AppState = initialAppState, action: Actions) => {
           maxVolum: 10,
           minPrice: 0,
           maxPrice: 2000000,
+          sortIndex: 1,
         },
       };
     case 'SET_ADDED_REVIEW':
