@@ -1,16 +1,17 @@
 # WineEncyclopedia
 
-<!-- ![gif](assets/readme-assets/finalProduct.gif) -->
 <p align="center">
-  <img src="assets/readme-assets/finalProduct.gif" style="width: 350px;">
+  <img src="assets/readme-assets/finalProduct_resized.gif" style="width: 350px;">
 </p >
 <p align="center">
   _...gif is loading_
 </p>
 
+**This project is the delivery for alternative A of project 4**
+
 WineEncyclopedia is used for finding different kinds of beverages. The dataset is gathered from Vinmonopolets exposed, free CSV-file.
 This can be done by searching on product names, including filtering on category, volume and price.
-Each product can be clicked on and the site will then render a product page showing more details about the chosen product. On the product site you can review products and see the reviews written by others.
+Each product can be clicked on and the site will then render a product screen showing more details about the chosen product. On the product site you can review products and see the reviews written by others.
 
 ## Run the project
 
