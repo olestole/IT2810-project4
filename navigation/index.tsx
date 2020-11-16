@@ -58,9 +58,7 @@ const OverviewNavigator = () => {
             </IconButton>
           ),
           headerRight: () => (
-            <IconButton color='white' icon='magnify' onPress={() => navigation.toggleDrawer()}>
-              Tilbake
-            </IconButton>
+            <IconButton color='white' icon='magnify' onPress={() => navigation.toggleDrawer()} />
           ),
         })}
       />
@@ -71,14 +69,11 @@ const OverviewNavigator = () => {
           headerTitle: 'Detail',
 
           headerLeft: () => (
-            <Button
-              compact
+            <IconButton
               color='white'
               icon='keyboard-backspace'
               onPress={() => handleDetailBack(navigation)}
-            >
-              Tilbake
-            </Button>
+            />
           ),
         })}
       />
