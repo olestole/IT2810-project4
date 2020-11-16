@@ -41,12 +41,6 @@ const ProductInfo: React.FC<IProductInfo> = ({ product }) => {
             <Text style={styles.price}>{product.Produsent}</Text>
           </View>
         </View>
-        {/* <Text>{product.Volum}</Text>
-        <Text>{product.Produsent}</Text>
-        <Text>{product.Farge}</Text>
-        <Text>{product.Land}</Text>
-        <Text>{product.Lukt}</Text>
-        <Text>{product.Smak}</Text> */}
       </View>
     </View>
   );
@@ -57,8 +51,6 @@ export default ProductInfo;
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
   imageContainer: {
     height: 400,
@@ -71,7 +63,6 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   productName: {
-    // margin: 15,
     fontSize: 20,
     fontWeight: '700',
     textDecorationLine: 'underline',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Modal, Portal } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { setModalOpen } from '../../../store/action';
@@ -30,7 +30,6 @@ export default ReviewModal;
 
 const styles = StyleSheet.create({
   modal: {
-    // flex: 1,
     backgroundColor: '#fff',
     width: '80%',
     maxHeight: '80%',

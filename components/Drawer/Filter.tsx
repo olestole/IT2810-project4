@@ -1,5 +1,5 @@
 import React from 'react';
-import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState, FilterOptions } from '../../store/types';
 import { filter, filterVolumAndPrice, setSearchText, updateViewMode } from '../../store/action';
@@ -7,8 +7,6 @@ import { Chip, Divider, List, TextInput, useTheme } from 'react-native-paper';
 import { CheckBox } from 'react-native-elements';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
-import { useEffect } from 'react';
-import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 
 const styles = StyleSheet.create({
   rootContainer: {
@@ -16,14 +14,12 @@ const styles = StyleSheet.create({
     margin: 15,
     justifyContent: 'center',
   },
-  appMenu: {},
   checkBox: {
     backgroundColor: '#fff',
     borderWidth: 0,
     margin: 0,
     padding: 2,
   },
-  searchField: {},
   divider: {
     marginVertical: 30,
   },
@@ -76,7 +72,7 @@ const Filter = ({ navigation }: any) => {
     dispatch(setSearchText(searchInput));
     dispatch(updateViewMode({ field: 'initialLoad', value: true }));
     setSearchInput('');
-    navigation.toggleDrawer();
+    navigation.closeDrawer();
   };
 
   const handleDelete = () => {
@@ -96,7 +92,6 @@ const Filter = ({ navigation }: any) => {
         <View>
           <TextInput
             dense={true}
-            style={styles.searchField}
             blurOnSubmit
             label='Søk på ønsket produkt'
             multiline
@@ -105,6 +100,7 @@ const Filter = ({ navigation }: any) => {
             onChangeText={(value) => setSearchInput(value)}
             onBlur={() => Keyboard.dismiss()}
             onSubmitEditing={handleSearchSubmit}
+            returnKeyType={'search'}
           />
           {searchText !== '' && (
             <Chip

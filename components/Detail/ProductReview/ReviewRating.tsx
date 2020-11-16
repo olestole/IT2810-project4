@@ -26,5 +26,3 @@ const ReviewRating: React.FC<IRating> = ({ rating, setRating, inputError }) => {
 };
 
 export default ReviewRating;
-
-const styles = StyleSheet.create({});

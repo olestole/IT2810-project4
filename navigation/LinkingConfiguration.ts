@@ -11,12 +11,6 @@ export default {
           OverviewNavigator: 'OverviewNavigator',
         },
       },
-      Profile: {
-        screens: {
-          ProfileScreen: 'profile',
-        },
-      },
-      NotFound: '*',
     },
   },
 };

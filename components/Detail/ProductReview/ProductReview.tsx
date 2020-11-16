@@ -8,11 +8,10 @@ import { InputReview } from '../../../types/graphql-global-types';
 import { setAddedReview, setModalOpen } from '../../../store/action';
 import ReviewModal from './ReviewModal';
 import { Button } from 'react-native-paper';
-import { StyleSheet } from 'react-native';
 import ReviewRating from './ReviewRating';
 import { ReviewDescription, ReviewTitle } from './ReviewInput';
 
-const ProductReview = ({ onToggleSnackBar }: any) => {
+const ProductReview = () => {
   const currentProduct = useSelector((state: AppState) => state.currentProduct);
   const dispatch = useDispatch();
 
@@ -42,21 +41,15 @@ const ProductReview = ({ onToggleSnackBar }: any) => {
   };
 
   const handleSubmitReview = async () => {
-    onToggleSnackBar();
     // If any of the fields haven't been filled out
     if (!currentProduct) {
-      onToggleSnackBar();
-
-      // toast.error(`Produktet ser ikke ut til å ha lastet korrekt, forsøk pånytt`);
+      // TODO: Add a feedback in the form of a snackbar or a toast
       return;
     }
     if (!(rating >= 1 && rating <= 5 && description !== '' && reviewTitle !== '')) {
-      // toast.error(`Husk å fylle ut alle feltene 👮🏽‍♀`);
       setInputError(true);
     } else {
       await submitReview();
-      // toast.success('Anmeldelsen er registrert🦄');
-      onToggleSnackBar();
       dispatch(setModalOpen(false));
 
       setRating(0);
@@ -79,15 +72,11 @@ const ProductReview = ({ onToggleSnackBar }: any) => {
         setDescription={setDescription}
         inputError={inputError}
       />
-      <Button style={styles.saveButton} mode='contained' onPress={handleSubmitReview}>
+      <Button mode='contained' onPress={handleSubmitReview}>
         Lagre anmeldelse
       </Button>
     </ReviewModal>
   );
 };
-
-const styles = StyleSheet.create({
-  saveButton: {},
-});
 
 export default ProductReview;
