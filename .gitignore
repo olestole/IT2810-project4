@@ -19,3 +19,5 @@ web-build/
 # Generated files
 generated/
 graphql-global-types.ts
+
+.env

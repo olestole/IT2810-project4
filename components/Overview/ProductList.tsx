@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   tableHeader: {},
   flatList: {
     width: '100%',
-    height: '94%',
+    height: '93%',
   },
   tableContainer: {
     width: '100%',
@@ -106,6 +106,7 @@ const ProductList: React.FC<IProductList> = ({ handleDetailNavigation }) => {
             onEndReached={handleEndReached}
             data={data.products}
             keyExtractor={(_, index) => index.toString()}
+            ListFooterComponent={() => <LoadingIndicator />}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => handleDetailNavigation(item as Product)}>
                 <ProductListItem varenavn={item.Varenavn} varetype={item.Varetype ?? ''} />
